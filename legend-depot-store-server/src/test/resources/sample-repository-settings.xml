@@ -21,11 +21,11 @@
                           https://maven.apache.org/xsd/settings-1.0.0.xsd">
 
 
-    <localRepository>target/.m2/repository</localRepository>     <!--the location of the local maven repository can be changed-->
+    <localRepository>C:\Users\allen\.m2\repository</localRepository>     <!--the location of the local maven repository can be changed-->
 
 
     <interactiveMode>false</interactiveMode>
-    <offline>false</offline>
+    <offline>true</offline>
     <profiles>
         <profile>
             <activation>
@@ -34,8 +34,8 @@
             <repositories>
                 <!--pubic gitlab group packages repository examples; replace gitlab groupId with yours-->
                 <repository>
-                    <id>legend-public-group-repo</id>
-                    <url>https://gitlab.com/api/v4/groups/10863602/-/packages/maven</url>
+                    <id>redis-projects</id>
+                    <url>https://gitlab.com/api/v4/groups/67718607/-/packages/maven</url>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>
@@ -47,7 +47,7 @@
                 </repository>
                 <repository>
                     <id>LegendPipelineTesting-public-group-repo</id>
-                    <url>https://gitlab.com/api/v4/groups/13480401/-/packages/maven</url>
+                    <url>https://gitlab.com/api/v4/groups/67718607/-/packages/maven</url>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>
@@ -60,7 +60,7 @@
                 <!--private gitlab group packages repository example; replace gitlab groupId with yours-->
                 <repository>
                     <id>LegendPipelineTesting-private-group-repo</id>
-                    <url>https://gitlab.com/api/v4/groups/13480401/-/packages/maven</url>
+                    <url>https://gitlab.com/api/v4/groups/67718607/-/packages/maven</url>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>
@@ -75,7 +75,7 @@
                 deploy token with read-registry to repository its needed -->
                 <repository>
                     <id>private-project-repo</id>
-                    <url>https://gitlab.com/api/v4/projects/25339854/packages/maven</url>
+                    <url>https://gitlab.com/api/v4/projects/67718607/packages/maven</url>
                     <releases>
                         <enabled>true</enabled>
                         <updatePolicy>never</updatePolicy>

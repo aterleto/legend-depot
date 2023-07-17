@@ -17,7 +17,6 @@ package org.finos.legend.depot.store.artifacts.services;
 
 import org.finos.legend.depot.artifacts.repository.api.ArtifactRepository;
 import org.finos.legend.depot.artifacts.repository.domain.ArtifactType;
-import org.finos.legend.depot.artifacts.repository.services.RepositoryServices;
 import org.finos.legend.depot.domain.DatesHandler;
 import org.finos.legend.depot.domain.api.MetadataEventResponse;
 import org.finos.legend.depot.domain.project.StoreProjectData;
@@ -27,7 +26,6 @@ import org.finos.legend.depot.services.api.projects.ManageProjectsService;
 import org.finos.legend.depot.services.entities.ManageEntitiesServiceImpl;
 import org.finos.legend.depot.services.generation.file.ManageFileGenerationsServiceImpl;
 import org.finos.legend.depot.services.projects.ManageProjectsServiceImpl;
-import org.finos.legend.depot.store.admin.api.metrics.QueryMetricsStore;
 import org.finos.legend.depot.store.admin.domain.metrics.VersionQueryMetric;
 import org.finos.legend.depot.store.api.entities.UpdateEntities;
 import org.finos.legend.depot.store.api.generation.file.UpdateFileGenerations;

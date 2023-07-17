@@ -29,6 +29,8 @@ import org.finos.legend.depot.schedules.SchedulesModule;
 import org.finos.legend.depot.store.metrics.MetricsModule;
 import org.finos.legend.depot.store.mongo.DataStoreMongoModule;
 import org.finos.legend.depot.store.mongo.admin.AdminDataStoreMongoModule;
+import org.finos.legend.depot.store.redis.DataStoreRedisModule;
+import org.finos.legend.depot.store.redis.admin.AdminDataStoreRedisModule;
 import org.finos.legend.depot.tracing.TracingModule;
 
 import java.util.Arrays;
@@ -52,9 +54,11 @@ public class LegendDepotServer extends BaseServer<DepotServerConfiguration>
                 new DepotServerModule(),
                 new DepotServerResourcesModule(),
                 new ReadDataServicesModule(),
-                new DataStoreMongoModule(),
+                //new DataStoreMongoModule(), //TODO short-term hack to avoid refactor
+                new DataStoreRedisModule(),
                 new PureModelContextModule(),
-                new AdminDataStoreMongoModule(),
+                //new AdminDataStoreRedisModule(),  //TODO short-term hack to avoid refactor
+                new AdminDataStoreRedisModule(),
                 new MetricsModule(),
                 new SchedulesModule(),
                 new TracingModule());

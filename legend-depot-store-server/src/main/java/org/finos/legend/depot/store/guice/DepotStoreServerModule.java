@@ -100,8 +100,8 @@ public class DepotStoreServerModule extends BaseModule<DepotStoreServerConfigura
     @Named("storage-metrics")
     boolean scheduleStorageMetrics(SchedulesFactory schedulesFactory, StorageMetrics storageMetrics)
     {
-        storageMetrics.init();
-        schedulesFactory.register("storage-metrics", 5 * SchedulesFactory.MINUTE, 5 * SchedulesFactory.MINUTE,storageMetrics::reportMetrics);
+        //storageMetrics.init(); //TODO
+        //schedulesFactory.register("storage-metrics", 5 * SchedulesFactory.MINUTE, 5 * SchedulesFactory.MINUTE,storageMetrics::reportMetrics);
         return true;
     }
 

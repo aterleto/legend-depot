@@ -77,19 +77,19 @@
         "org.finos.legend.server.pac4j.gitlab.GitlabClient": {
           "name": "depot",
           "clientId": "3356cc23d68608820d00ca38217803d32532c233f1ada6251c664ea92c40511a",
-          "secret": "ce5b29b6d1b1b7c38729378e7736a98449f936605d34e2035ca7b5d504f92570",
+          "secret": "e5ddf3c349be7619ca3bce9b22f768e34a00548cc65a7499171a0b4679dde5e1",
           "discoveryUri": "https://gitlab.com/.well-known/openid-configuration",
           "scope": "openid profile api"
         }
       }
     ],
-    "mongoAuthorizer": {
-      "enabled": true,
-      "collection": "allowedUsers"
-    },
-    "mongoSession": {
-      "enabled": true,
-      "collection": "userSessions"
+    "sessionStoreConfiguration": {
+      "enabled": "true",
+      "type": "redis",
+      "databaseURI": "redis-connect.redisdemo.com",
+      "customConfigurations": {
+        "port": 14002
+      }
     }
   },
   "filterPriorities": {
@@ -102,13 +102,18 @@
   "artifactRepositoryProviderConfiguration": {
 
     "org.finos.legend.depot.artifacts.repository.maven.impl.MavenArtifactRepositoryConfiguration": {
-      "settingsLocation": "C:\\Workspaces\\Goldman_Sachs_Legend_Depot\\legend-depot\\legend-depot-store-server\\src\\test\\resources\\sample-repository-settings.xml",
-      "versionsUpdateIntervalInMillis": 7200000,
+      "settingsLocation": "C:\\Workspaces\\Goldman_Sachs_Legend_Depot\\legend-depot\\legend-depot-store-server\\src\\test\\resources\\settings.xml",
+      "versionsUpdateIntervalInMillis": 3600000,
       "latestUpdateIntervalInMillis": 3600000
     }
   },
   "includeProjectPropertiesConfiguration": {
     "properties": []
+  },
+  "artifactsRetentionPolicyConfiguration": {
+    "maximumSnapshotsAllowed": 5,
+    "ttlForVersionsInDays": 365,
+    "ttlForSnapshotsInDays": 30
   },
   "queue-interval": 30
 }

@@ -23,6 +23,7 @@ import org.finos.legend.depot.artifacts.repository.RepositoryModule;
 import org.finos.legend.depot.artifacts.repository.api.ArtifactRepositoryProviderConfiguration;
 import org.finos.legend.depot.core.authorisation.AuthorisationModule;
 import org.finos.legend.depot.core.http.BaseServer;
+import org.finos.legend.depot.core.http.ServersConfiguration;
 import org.finos.legend.depot.core.http.resources.InfoPageModule;
 import org.finos.legend.depot.services.ManageServicesModule;
 import org.finos.legend.depot.schedules.AdminSchedulesModule;
@@ -36,6 +37,8 @@ import org.finos.legend.depot.store.metrics.AdminMetricsModule;
 import org.finos.legend.depot.store.mongo.admin.ManageAdminDataStoreMongoModule;
 import org.finos.legend.depot.store.mongo.ManageDataStoreMongoModule;
 import org.finos.legend.depot.store.notifications.NotificationsModule;
+import org.finos.legend.depot.store.redis.ManageDataStoreRedisModule;
+import org.finos.legend.depot.store.redis.admin.ManageAdminDataStoreRedisModule;
 import org.finos.legend.depot.store.server.configuration.DepotStoreServerConfiguration;
 import org.finos.legend.depot.store.status.StoreStatusModule;
 import org.finos.legend.depot.tracing.TracingModule;
@@ -52,6 +55,7 @@ public class LegendDepotStoreServer extends BaseServer<DepotStoreServerConfigura
 
     public static void main(String... args) throws Exception
     {
+
         new LegendDepotStoreServer().run(args);
     }
 
@@ -71,8 +75,10 @@ public class LegendDepotStoreServer extends BaseServer<DepotStoreServerConfigura
                 new DepotStoreServerModule(),
                 new DepotStoreResourcesModule(),
                 new ManageServicesModule(),
-                new ManageDataStoreMongoModule(),
-                new ManageAdminDataStoreMongoModule(),
+                //new ManageDataStoreMongoModule(),  //TODO short-term hack to avoid refactor
+                new ManageDataStoreRedisModule(),
+                //new ManageAdminDataStoreMongoModule(),
+                new ManageAdminDataStoreRedisModule(), //TODO short-term hack to avoid refactor
                 new StoreStatusModule(),
                 new AdminSchedulesModule(),
                 new AdminMetricsModule(),

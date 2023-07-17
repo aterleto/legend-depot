@@ -1,0 +1,17 @@
+[
+  {
+    "projectId": "PROD-A",
+    "groupId": "examples.metadata",
+    "artifactId": "test"
+  },
+  {
+    "projectId": "PROD-B",
+    "groupId": "examples.metadata",
+    "artifactId": "test-dependencies"
+  },
+  {
+    "projectId": "PROD-C",
+    "groupId": "example.services.test",
+    "artifactId": "test"
+  }
+]

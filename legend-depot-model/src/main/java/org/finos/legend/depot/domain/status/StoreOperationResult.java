@@ -94,7 +94,6 @@ public class StoreOperationResult
         return String.format("inserted: [%s], modified:[%s], deleted:[%s] ", insertedCount, modifiedCount, deletionCount);
     }
 
-
     public void combine(StoreOperationResult result)
     {
         if (result != null)

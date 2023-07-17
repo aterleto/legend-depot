@@ -35,7 +35,7 @@
     "org.finos.legend.depot.store.mongo.core.MongoConfiguration": {
       "url": "mongodb+srv://redisconnect:Redis123@connect.qdjssws.mongodb.net",
       "database": "depot-dev",
-      "tracing": false
+      "tracing": true
     }
   },
   "openTracing": {
@@ -83,13 +83,14 @@
         }
       }
     ],
-    "mongoAuthorizer": {
-      "enabled": true,
-      "collection": "allowedUsers"
-    },
-    "mongoSession": {
-      "enabled": true,
-      "collection": "userSessions"
+    "sessionStoreConfiguration": {
+      "enabled": "true",
+      "type": "mongoDb",
+      "databaseURI": "mongodb+srv://redisconnect:Redis123@connect.qdjssws.mongodb.net",
+      "customConfigurations": {
+        "databaseName": "depot-dev",
+        "collection": "userSessions"
+      }
     }
   },
   "filterPriorities": {
@@ -102,13 +103,18 @@
   "artifactRepositoryProviderConfiguration": {
 
     "org.finos.legend.depot.artifacts.repository.maven.impl.MavenArtifactRepositoryConfiguration": {
-      "settingsLocation": "C:\\Workspaces\\Goldman_Sachs_Legend_Depot\\legend-depot\\legend-depot-store-server\\src\\test\\resources\\sample-repository-settings.xml",
-      "versionsUpdateIntervalInMillis": 7200000,
+      "settingsLocation": "C:\\Workspaces\\Goldman_Sachs_Legend_Depot\\legend-depot\\legend-depot-store-server\\src\\test\\resources\\settings.xml",
+      "versionsUpdateIntervalInMillis": 3600000,
       "latestUpdateIntervalInMillis": 3600000
     }
   },
   "includeProjectPropertiesConfiguration": {
     "properties": []
+  },
+  "artifactsRetentionPolicyConfiguration": {
+    "maximumSnapshotsAllowed": 5,
+    "ttlForVersionsInDays": 365,
+    "ttlForSnapshotsInDays": 30
   },
   "queue-interval": 30
 }

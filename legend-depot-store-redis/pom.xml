@@ -18,14 +18,15 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>legend-depot</artifactId>
         <groupId>org.finos.legend.depot</groupId>
+        <artifactId>legend-depot</artifactId>
         <version>1.13.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Legend Depot - Store - Notifications</name>
-    <artifactId>legend-depot-store-notifications</artifactId>
+    <name>Legend Depot - Store - Redis</name>
+    <artifactId>legend-depot-store-redis</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- DEPOT -->
@@ -35,11 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.finos.legend.depot</groupId>
-            <artifactId>legend-depot-core-services</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.finos.legend.depot</groupId>
-            <artifactId>legend-depot-core-schedules</artifactId>
+            <artifactId>legend-depot-store-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.finos.legend.depot</groupId>
@@ -47,26 +44,11 @@
         </dependency>
         <dependency>
             <groupId>org.finos.legend.depot</groupId>
-            <artifactId>legend-depot-core-http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.finos.legend.depot</groupId>
-            <artifactId>legend-depot-store-redis</artifactId>
+            <artifactId>legend-depot-core-authorisation</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.finos.legend.depot</groupId>
-            <artifactId>legend-depot-store-mongo</artifactId>
-            <classifier>tests</classifier>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
         <!-- DEPOT -->
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -76,8 +58,23 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <scope>compile</scope> <!-- We might want to exclude from pac4j like mongo does -->
+        </dependency>
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -85,14 +82,30 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>de.bwaldvogel</groupId>
             <artifactId>mongo-java-server</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -64,6 +64,7 @@ public abstract class BaseServer<T extends ServersConfiguration> extends Applica
     @Override
     public void initialize(Bootstrap<T> bootstrap)
     {
+
         bootstrap.addBundle(new HostnameHeaderBundle());
         bootstrap.addBundle(new LegendPac4jBundle<>(ServersConfiguration::getPac4jConfiguration));
         bootstrap.addBundle(new SwaggerBundle<ServersConfiguration>()

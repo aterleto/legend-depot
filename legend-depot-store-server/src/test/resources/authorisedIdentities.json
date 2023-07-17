@@ -1,8 +1,5 @@
 {
-  "ArtifactsPurge": [
-    "atereto"
-  ],
-  "ArtifactsRefresh": [
+  "Artifacts": [
     "atereto"
   ],
   "Store Administration": [
@@ -18,9 +15,6 @@
     "atereto"
   ],
   "Entities": [
-    "atereto"
-  ],
-  "Versions": [
     "atereto"
   ]
 }

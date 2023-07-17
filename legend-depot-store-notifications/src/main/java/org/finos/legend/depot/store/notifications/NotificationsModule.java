@@ -28,7 +28,9 @@ import org.finos.legend.depot.store.notifications.services.NotificationsQueueMan
 import org.finos.legend.depot.store.notifications.store.api.NotificationsStore;
 import org.finos.legend.depot.store.notifications.store.mongo.NotificationsMongo;
 import org.finos.legend.depot.store.notifications.store.mongo.NotificationsQueueMongo;
-import org.finos.legend.depot.store.notifications.store.mongo.NotificationsStoreImpl;
+import org.finos.legend.depot.store.notifications.store.redis.NotificationsQueueRedis;
+import org.finos.legend.depot.store.notifications.store.redis.NotificationsRedis;
+import org.finos.legend.depot.store.notifications.store.redis.NotificationsStoreImpl;
 import org.finos.legend.depot.tracing.api.PrometheusMetricsHandler;
 
 import javax.inject.Named;
@@ -50,8 +52,11 @@ public class NotificationsModule extends PrivateModule
     {
 
         bind(NotificationsManager.class).to(NotificationsQueueManager.class);
-        bind(Notifications.class).to(NotificationsMongo.class);
-        bind(Queue.class).to(NotificationsQueueMongo.class);
+        //bind(Notifications.class).to(NotificationsMongo.class);  //TODO short-term hack to avoid refactor
+        bind(Notifications.class).to(NotificationsRedis.class);
+        //bind(Queue.class).to(NotificationsQueueMongo.class);
+        bind(Queue.class).to(NotificationsQueueRedis.class); //TODO short-term hack to avoid refactor
+        //bind(NotificationsStore.class).to(NotificationsStoreImpl.class); //TODO short-term hack to avoid refactor
         bind(NotificationsStore.class).to(NotificationsStoreImpl.class);
         bind(NotificationsManagerResource.class);
 
