@@ -51,7 +51,8 @@ public class SchedulesRedis extends BaseRedis<ScheduleInfo> implements Schedules
     }
 
     @Override
-    protected String getKey(ScheduleInfo data) {
+    protected String getKey(ScheduleInfo data)
+    {
         return COLLECTION + REDIS_KEY_DELIMITER + data.getName(); // based on the use of findOne it can be assumed that name is unique
     }
 
@@ -74,7 +75,8 @@ public class SchedulesRedis extends BaseRedis<ScheduleInfo> implements Schedules
     }
 
     @Override
-    public ScheduleInfo createOrUpdate(ScheduleInfo scheduleInfo) {
+    public ScheduleInfo createOrUpdate(ScheduleInfo scheduleInfo)
+    {
         return createOrUpdate(COLLECTION, true, false, scheduleInfo);
     }
 

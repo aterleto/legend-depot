@@ -24,12 +24,20 @@ import org.slf4j.Logger;
 import redis.clients.jedis.UnifiedJedis;
 import redis.clients.jedis.json.JsonSetParams;
 import redis.clients.jedis.json.Path;
-import redis.clients.jedis.search.*;
+import redis.clients.jedis.search.Document;
+import redis.clients.jedis.search.IndexDefinition;
+import redis.clients.jedis.search.IndexOptions;
+import redis.clients.jedis.search.Query;
+import redis.clients.jedis.search.Schema;
+import redis.clients.jedis.search.SearchResult;
 import redis.clients.jedis.search.aggr.AggregationBuilder;
 import redis.clients.jedis.search.aggr.AggregationResult;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 import static org.finos.legend.depot.domain.DatesHandler.toTime;
@@ -93,7 +101,11 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             redisClient.ftInfo(indexName);
             return indexName; // if index does not exist this cannot be reached
-        } catch (Exception e) {}
+        }
+        catch (Exception e)
+        {
+            // if index already exists this will consume the exception which is the expected behavior
+        }
 
         // For SORTABLE fields, the default ordering is ASC if not specified otherwise
         // Uniqueness will need to be managed at the INSERT level using the NX option since Redis does not support unique indexes
@@ -109,7 +121,7 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             fieldValue = handleSpecialCharacters(String.valueOf(fieldValue));
         }
-        return query.append(fieldModifier) .append(":{ ") .append(fieldValue) .append(" } ");
+        return query.append(fieldModifier).append(":{ ").append(fieldValue).append(" } ");
     }
 
     protected StringBuffer appendQueryTagLessThanCondition(StringBuffer query, String fieldModifier, Object fieldValue)
@@ -118,7 +130,7 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             fieldValue = handleSpecialCharacters(String.valueOf(fieldValue));
         }
-        return query.append(fieldModifier) .append(":[-inf (") .append(fieldValue) .append("] ");
+        return query.append(fieldModifier).append(":[-inf (").append(fieldValue).append("] ");
     }
 
     protected StringBuffer appendQueryTagLessThanOrEqualToCondition(StringBuffer query, String fieldModifier, Object fieldValue)
@@ -127,7 +139,7 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             fieldValue = handleSpecialCharacters(String.valueOf(fieldValue));
         }
-        return query.append(fieldModifier) .append(":[-inf ") .append(fieldValue) .append("] ");
+        return query.append(fieldModifier).append(":[-inf ").append(fieldValue).append("] ");
     }
 
     protected StringBuffer appendQueryTagGreaterThanOrEqualToCondition(StringBuffer query, String fieldModifier, Object fieldValue)
@@ -136,7 +148,7 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             fieldValue = handleSpecialCharacters(String.valueOf(fieldValue));
         }
-        return query.append(fieldModifier) .append(":[") .append(fieldValue) .append(" inf] ");
+        return query.append(fieldModifier).append(":[").append(fieldValue).append(" inf] ");
     }
 
     protected StringBuffer appendQueryTagNotEqualCondition(StringBuffer query, String fieldModifier, Object fieldValue)
@@ -145,7 +157,7 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             fieldValue = handleSpecialCharacters(String.valueOf(fieldValue));
         }
-        return query.append("-") .append(REDIS_QUERY_FIELD_MOD_PREFIX) .append(fieldModifier) .append(":{ ") .append(fieldValue) .append(" } ");
+        return query.append("-").append(REDIS_QUERY_FIELD_MOD_PREFIX).append(fieldModifier).append(":{ ").append(fieldValue).append(" } ");
     }
 
     protected StringBuffer appendQueryTagPrefixCondition(StringBuffer query, String fieldModifier, String prefix)
@@ -154,10 +166,11 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             prefix = handleSpecialCharacters(prefix);
         }
-        return query.append(fieldModifier) .append(":{ ") .append(prefix) .append("*} ");
+        return query.append(fieldModifier).append(":{ ").append(prefix).append("*} ");
     }
 
-    protected long count(String collectionName, Query query) {
+    protected long count(String collectionName, Query query)
+    {
         query.limit(0,0);
 
         SearchResult countResult = redisClient.ftSearch(collectionName + REDIS_QUERY_INDEX_SUFFIX, query);
@@ -207,7 +220,9 @@ public abstract class BaseRedis<T extends HasIdentifier>
         if (isIndexUnique)
         {
             status = redisClient.jsonSet(key, Path.ROOT_PATH, propertiesMap, jsonSetOnlyIfNotExistParam);
-        } else {
+        }
+        else
+        {
             status = redisClient.jsonSet(key, Path.ROOT_PATH, propertiesMap);
         }
 
@@ -220,10 +235,13 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected long deleteByKey(String key)
     {
         if (key == null || key.isEmpty())
+        {
             return 0;
+        }
 
         long result = redisClient.unlink(key);
-        if (LOGGER.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled())
+        {
             LOGGER.debug("delete key:{}", key);
         }
         return result;
@@ -233,12 +251,15 @@ public abstract class BaseRedis<T extends HasIdentifier>
     {
         AggregationResult result = redisClient.ftAggregate(collectionName + REDIS_QUERY_INDEX_SUFFIX, aggregation);
         if (result == null)
+        {
             return 0;
+        }
 
         long counter = 0;
 
         List<Map<String, Object>> documents = result.getResults();
-        if (documents != null && !documents.isEmpty()) {
+        if (documents != null && !documents.isEmpty())
+        {
             for (Map<String, Object> document : documents)
             {
                 counter = counter + deleteByKey(String.valueOf(document.get(ID)));
@@ -251,12 +272,15 @@ public abstract class BaseRedis<T extends HasIdentifier>
     {
         SearchResult result = redisClient.ftSearch(collectionName + REDIS_QUERY_INDEX_SUFFIX, query);
         if (result == null)
+        {
             return 0;
+        }
 
         long counter = 0;
 
         List<Document> documents = result.getDocuments();
-        if (documents != null && !documents.isEmpty()) {
+        if (documents != null && !documents.isEmpty())
+        {
             for (Document document : documents)
             {
                 counter = counter + deleteByKey(document.getId());
@@ -268,7 +292,8 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected List<Document> find(String collectionName, Query query)
     {
         SearchResult searchResult = redisClient.ftSearch(collectionName + REDIS_QUERY_INDEX_SUFFIX, query);
-        if (searchResult != null) {
+        if (searchResult != null)
+        {
             return searchResult.getDocuments();
         }
         return null;
@@ -297,15 +322,18 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected Optional<Document> findOne(String collectionName, Query query)
     {
         SearchResult searchResult = redisClient.ftSearch(collectionName + REDIS_QUERY_INDEX_SUFFIX, query);
-        if (searchResult == null) {
+        if (searchResult == null)
+        {
             return Optional.empty();
         }
 
         List<Document> documents = searchResult.getDocuments();
-        if (documents.isEmpty()) {
+        if (documents.isEmpty())
+        {
             return Optional.empty();
         }
-        else if (documents.size() > 1) {
+        else if (documents.size() > 1)
+        {
             throw new IllegalStateException(String.format(" Found more than one match %s in collection %s", query.toString(), collectionName));
         }
         return Optional.of(documents.get(0));
@@ -314,15 +342,18 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected Optional<T> findOneAndConvert(String collectionName, Query query)
     {
         SearchResult searchResult = redisClient.ftSearch(collectionName + REDIS_QUERY_INDEX_SUFFIX, query);
-        if (searchResult == null) {
+        if (searchResult == null)
+        {
             return Optional.empty();
         }
 
         List<T> documents = convertDocumentsToDomainList(searchResult.getDocuments());
-        if (documents.isEmpty()) {
+        if (documents.isEmpty())
+        {
             return Optional.empty();
         }
-        else if (documents.size() > 1) {
+        else if (documents.size() > 1)
+        {
             throw new IllegalStateException(String.format(" Found more than one match %s in collection %s", query.toString(), collectionName));
         }
         return Optional.of(documents.get(0));
@@ -342,7 +373,8 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected List<T> convertDocumentsToDomainList(List<Document> documents)
     {
         List<T> result = new ArrayList<>();
-        if (documents != null) {
+        if (documents != null)
+        {
             documents.forEach(doc -> result.add(convertDocumentToDomain(doc, documentClass)));
         }
         return result;
@@ -369,7 +401,8 @@ public abstract class BaseRedis<T extends HasIdentifier>
         }
 
         String jsonString = String.valueOf(document.get(REDIS_JSON_ROOT));
-        if (jsonString == null || jsonString.isEmpty()) {
+        if (jsonString == null || jsonString.isEmpty())
+        {
             return null;
         }
 
@@ -377,29 +410,6 @@ public abstract class BaseRedis<T extends HasIdentifier>
         {
             Map<String, Object> properties = objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
             return objectMapper.convertValue(properties, clazz);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(String.format("error converting document (%s) to class %s. reason: %s", document.getId(), clazz.getSimpleName(), e.getMessage()));
-            return null;
-        }
-    }
-
-    private Map<String, Object> convertDocumentToPropertiesMap(Document document, Class<T> clazz)
-    {
-        if (document == null && document.hasProperty(REDIS_JSON_ROOT))
-        {
-            return null;
-        }
-
-        String jsonString = String.valueOf(document.get(REDIS_JSON_ROOT));
-        if (jsonString == null || jsonString.isEmpty()) {
-            return null;
-        }
-
-        try
-        {
-            return objectMapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
         }
         catch (Exception e)
         {
@@ -424,7 +434,8 @@ public abstract class BaseRedis<T extends HasIdentifier>
     protected List<T> convertPropertiesMapsToDomains(List<Map<String, Object>> propertiesMaps)
     {
         List<T> result = new ArrayList<>();
-        if (propertiesMaps != null) {
+        if (propertiesMaps != null)
+        {
             propertiesMaps.forEach(doc -> result.add(convertPropertiesMapToDomain(doc, documentClass)));
         }
         return result;
@@ -454,14 +465,16 @@ public abstract class BaseRedis<T extends HasIdentifier>
         return query;
     }
 
-    protected StringBuffer getArtifactAndVersionFilter(StringBuffer query, String groupId, String artifactId, String versionId) {
+    protected StringBuffer getArtifactAndVersionFilter(StringBuffer query, String groupId, String artifactId, String versionId)
+    {
         appendQueryTagEqualCondition(query, GROUP_ID_TAG, groupId);
         appendQueryTagEqualCondition(query, ARTIFACT_ID_TAG, artifactId);
         appendQueryTagEqualCondition(query, VERSION_ID_TAG, versionId);
         return query;
     }
 
-    private String handleSpecialCharacters(String input) {
+    private String handleSpecialCharacters(String input)
+    {
         return REDIS_QUERY_SPECIAL_CHARACTERS_PATTERN.matcher(input).replaceAll("\\\\$0");
     }
 

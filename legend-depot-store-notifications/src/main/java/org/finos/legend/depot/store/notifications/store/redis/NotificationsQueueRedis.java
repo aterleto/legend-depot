@@ -61,12 +61,13 @@ public class NotificationsQueueRedis extends BaseRedis<MetadataNotification> imp
     }
 
     @Override
-    protected String getKey(MetadataNotification data) {
+    protected String getKey(MetadataNotification data)
+    {
         StringBuffer sb = new StringBuffer(64);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getVersionId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getVersionId()).append(REDIS_KEY_DELIMITER);
         sb.append(System.currentTimeMillis());
         return sb.toString(); // unique compound key
     }
@@ -75,7 +76,8 @@ public class NotificationsQueueRedis extends BaseRedis<MetadataNotification> imp
     protected Query getKeyFilter(MetadataNotification data)
     {
         StringBuffer query = new StringBuffer();
-        if (data.getEventId() != null) {
+        if (data.getEventId() != null)
+        {
             appendQueryTagEqualCondition(query, ID_TAG, data.getEventId());
         }
         else

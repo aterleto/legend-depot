@@ -62,12 +62,13 @@ public class FileGenerationsRedis extends BaseRedis<StoredFileGeneration> implem
     }
 
     @Override
-    protected String getKey(StoredFileGeneration data) {
+    protected String getKey(StoredFileGeneration data)
+    {
         StringBuffer sb = new StringBuffer(64);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getVersionId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getVersionId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getFile().getPath());
         return sb.toString(); // unique compound key
     }
@@ -147,7 +148,8 @@ public class FileGenerationsRedis extends BaseRedis<StoredFileGeneration> implem
     }
 
     @Override
-    public StoredFileGeneration createOrUpdate(StoredFileGeneration detail) {
+    public StoredFileGeneration createOrUpdate(StoredFileGeneration detail)
+    {
         return createOrUpdate(COLLECTION, true, false, detail);
     }
 

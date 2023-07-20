@@ -51,7 +51,8 @@ public class ArtifactsFilesRedis extends BaseRedis<ArtifactFile> implements Arti
     }
 
     @Override
-    protected String getKey(ArtifactFile data) {
+    protected String getKey(ArtifactFile data)
+    {
         return COLLECTION + REDIS_KEY_DELIMITER + data.getPath(); // unique
     }
 
@@ -68,7 +69,8 @@ public class ArtifactsFilesRedis extends BaseRedis<ArtifactFile> implements Arti
     }
 
     @Override
-    public ArtifactFile createOrUpdate(ArtifactFile detail) {
+    public ArtifactFile createOrUpdate(ArtifactFile detail)
+    {
         return createOrUpdate(COLLECTION, true, false, detail);
     }
 

@@ -44,7 +44,8 @@ public class RedisAdminStore
     private final UnifiedJedis redisClient;
     private static List<String> collectionNameList = new ArrayList<>();
 
-    static {
+    static
+    {
         collectionNameList.add(ProjectsRedis.COLLECTION);
         collectionNameList.add(ProjectsVersionsRedis.COLLECTION);
         collectionNameList.add(EntitiesRedis.COLLECTION);

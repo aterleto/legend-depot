@@ -62,11 +62,12 @@ public class ProjectsVersionsRedis extends BaseRedis<StoreProjectVersionData> im
     }
 
     @Override
-    protected String getKey(StoreProjectVersionData data) {
+    protected String getKey(StoreProjectVersionData data)
+    {
         StringBuffer sb = new StringBuffer(64);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getVersionId());
         return sb.toString(); // unique compound key
     }
@@ -110,13 +111,15 @@ public class ProjectsVersionsRedis extends BaseRedis<StoreProjectVersionData> im
 
         SearchResult result = redisClient.ftSearch(COLLECTION + REDIS_QUERY_INDEX_SUFFIX, query);
         if (result == null)
+        {
             return 0;
-
+        }
         return result.getTotalResults();
     }
 
     @Override
-    public StoreProjectVersionData createOrUpdate(StoreProjectVersionData projectVersionData) {
+    public StoreProjectVersionData createOrUpdate(StoreProjectVersionData projectVersionData)
+    {
         return createOrUpdate(COLLECTION, true, false, projectVersionData);
     }
 
@@ -151,7 +154,6 @@ public class ProjectsVersionsRedis extends BaseRedis<StoreProjectVersionData> im
     @Override
     protected void validateNewData(StoreProjectVersionData data)
     {
-        /* //TODO remove after tests
         if (!CoordinateValidator.isValidGroupId(data.getGroupId()) || !CoordinateValidator.isValidArtifactId(data.getArtifactId()))
         {
             throw new IllegalArgumentException(String.format("invalid groupId [%s] or artifactId [%s]",data.getGroupId(),data.getArtifactId()));
@@ -160,7 +162,6 @@ public class ProjectsVersionsRedis extends BaseRedis<StoreProjectVersionData> im
         {
             throw new IllegalArgumentException(String.format("invalid versionId [%s]",data.getVersionId()));
         }
-        */
     }
 
 }

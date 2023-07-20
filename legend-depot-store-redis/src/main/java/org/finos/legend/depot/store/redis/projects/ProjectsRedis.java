@@ -59,10 +59,11 @@ public class ProjectsRedis extends BaseRedis<StoreProjectData> implements Projec
     }
 
     @Override
-    protected String getKey(StoreProjectData data) {
+    protected String getKey(StoreProjectData data)
+    {
         StringBuffer sb = new StringBuffer(32);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getArtifactId());
         return sb.toString(); // unique compound key
     }
@@ -81,7 +82,6 @@ public class ProjectsRedis extends BaseRedis<StoreProjectData> implements Projec
     @Override
     protected void validateNewData(StoreProjectData data)
     {
-        /* // TODO remove after tests
         if (!ProjectValidator.isValid(data))
         {
             throw new IllegalArgumentException(String.format("invalid project [%s] or invalid groupId [%s] or artifactId [%s]",data.getProjectId(),data.getGroupId(),data.getArtifactId()));
@@ -92,7 +92,6 @@ public class ProjectsRedis extends BaseRedis<StoreProjectData> implements Projec
         {
             throw new StoreException(String.format("Duplicate coordinates: Different project %s its already registered with this coordinates %s-%s", projectData.get().getProjectId(), data.getGroupId(), data.getArtifactId()));
         }
-        */
     }
 
     @Override
@@ -126,7 +125,8 @@ public class ProjectsRedis extends BaseRedis<StoreProjectData> implements Projec
     }
 
     @Override
-    public StoreProjectData createOrUpdate(StoreProjectData projectCoordinates) {
+    public StoreProjectData createOrUpdate(StoreProjectData projectCoordinates)
+    {
         return createOrUpdate(COLLECTION, true, false, projectCoordinates);
     }
 

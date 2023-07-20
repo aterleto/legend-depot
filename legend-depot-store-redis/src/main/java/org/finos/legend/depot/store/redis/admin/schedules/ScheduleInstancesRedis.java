@@ -52,10 +52,11 @@ public class ScheduleInstancesRedis extends BaseRedis<ScheduleInstance> implemen
     }
 
     @Override
-    protected String getKey(ScheduleInstance data) {
+    protected String getKey(ScheduleInstance data)
+    {
         StringBuffer sb = new StringBuffer(32);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getSchedule()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getSchedule()).append(REDIS_KEY_DELIMITER);
         sb.append(System.currentTimeMillis());
         return sb.toString();
     }
@@ -92,8 +93,8 @@ public class ScheduleInstancesRedis extends BaseRedis<ScheduleInstance> implemen
     }
 
     @Override
-    public void insert(ScheduleInstance instance) {
-
+    public void insert(ScheduleInstance instance)
+    {
         if (instance == null)
         {
             return;

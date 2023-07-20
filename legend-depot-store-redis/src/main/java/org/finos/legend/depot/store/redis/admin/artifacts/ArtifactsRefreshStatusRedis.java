@@ -27,7 +27,8 @@ import redis.clients.jedis.search.aggr.AggregationBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 
 public class ArtifactsRefreshStatusRedis extends BaseRedis<RefreshStatus> implements RefreshStatusStore
@@ -60,11 +61,12 @@ public class ArtifactsRefreshStatusRedis extends BaseRedis<RefreshStatus> implem
     }
 
     @Override
-    protected String getKey(RefreshStatus data) {
+    protected String getKey(RefreshStatus data)
+    {
         StringBuffer sb = new StringBuffer(64);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getVersionId());
         return sb.toString();
     }
@@ -95,7 +97,8 @@ public class ArtifactsRefreshStatusRedis extends BaseRedis<RefreshStatus> implem
     }
 
     @Override
-    public void insert(RefreshStatus status) {
+    public void insert(RefreshStatus status)
+    {
         insert(getKey(status), true, false, status);
     }
 

@@ -32,7 +32,11 @@ import redis.clients.jedis.search.aggr.Reducers;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 
 public class QueryMetricsRedis extends BaseRedis<VersionQueryMetric> implements QueryMetricsStore
@@ -67,12 +71,13 @@ public class QueryMetricsRedis extends BaseRedis<VersionQueryMetric> implements 
     }
 
     @Override
-    protected String getKey(VersionQueryMetric data) {
+    protected String getKey(VersionQueryMetric data)
+    {
         StringBuffer sb = new StringBuffer(64);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getVersionId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getVersionId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getLastQueryTime().getTime());
         return sb.toString(); // unique compound key
     }

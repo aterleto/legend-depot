@@ -44,7 +44,14 @@ import redis.clients.jedis.search.aggr.Reducers;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -101,12 +108,13 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
     }
 
     @Override
-    protected String getKey(StoredEntity data) {
+    protected String getKey(StoredEntity data)
+    {
         StringBuffer sb = new StringBuffer(128);
-        sb.append(COLLECTION) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getGroupId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getArtifactId()) .append(REDIS_KEY_DELIMITER);
-        sb.append(data.getVersionId()) .append(REDIS_KEY_DELIMITER);
+        sb.append(COLLECTION).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getGroupId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getArtifactId()).append(REDIS_KEY_DELIMITER);
+        sb.append(data.getVersionId()).append(REDIS_KEY_DELIMITER);
         sb.append(data.getEntity().getPath());
         return sb.toString(); // unique compound key
     }
@@ -186,8 +194,8 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
         }
 
         Optional<StoredEntity> optionalResult = findOneAndConvert(COLLECTION, getEntityPathFilter(entity));
-        if (optionalResult.isPresent()) {
-
+        if (optionalResult.isPresent())
+        {
             StoredEntity storedEntity = optionalResult.get();
 
             Map<String, Object> existingEntityPropertiesMap = convertDomainToPropertiesMap(storedEntity);
@@ -301,17 +309,20 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
 
         List<StoredEntity> result = new ArrayList<>();
         if (documents == null)
+        {
             return result;
+        }
 
-        for (Document document : documents) {
-
+        for (Document document : documents)
+        {
             if (document == null || !document.hasProperty(REDIS_JSON_ROOT))
             {
                 continue;
             }
 
             String jsonPayload = String.valueOf(document.get(REDIS_JSON_ROOT));
-            if (jsonPayload == null || jsonPayload.isEmpty()) {
+            if (jsonPayload == null || jsonPayload.isEmpty())
+            {
                 continue;
             }
 
@@ -329,7 +340,8 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
                             (String) entity.get(CLASSIFIER_PATH)));
                 }
             }
-            catch (JsonProcessingException jpe) {
+            catch (JsonProcessingException jpe)
+            {
                 LOGGER.error("error transforming stored entity id:" + COLLECTION + document.getId(), jpe);
                 continue;
             }
@@ -414,7 +426,8 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
                     if (!(pattern.matcher(storedEntityOverview.getPath()).find()))
                     {
                         iterator.remove();
-                    } else
+                    }
+                    else
                     {
                         counter++;
                     }
@@ -517,7 +530,8 @@ public class EntitiesRedis extends BaseRedis<StoredEntity> implements Entities, 
     }
 
     @Override
-    public List<StoredEntity> getAllStoredEntities() {
+    public List<StoredEntity> getAllStoredEntities()
+    {
         return findAll(COLLECTION);
     }
 
